@@ -3,6 +3,9 @@
 FROM debian:sid
 LABEL maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
 
+ARG ARCH="amd64"
+ARG OS="linux"
+
 RUN \
     apt-get update && apt-get install -y --no-install-recommends \
         apt-utils \
@@ -11,8 +14,8 @@ RUN \
         make \
 	&& rm -rf /var/lib/apt/lists/*
 
-RUN ls /bin
-COPY /build/prombench /prombench/prombench
+RUN ls .build
+COPY .build/${OS}-${ARCH}/prombench /prombench/prombench
 COPY Makefile /prombench/Makefile
 COPY manifests/prombench /prombench/manifests/prombench
 
