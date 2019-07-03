@@ -32,20 +32,20 @@ jobs:
     - prometheus/store_artifact:
         file: fake-webserver
   
-  build:
-    machine: true
+  # build:
+  #   machine: true
 
-    steps:
-    - checkout
-    - run: make promu
-    - run: promu crossbuild -v
-    - persist_to_workspace:
-        root: .
-        paths:
-        - .build
-    - store_artifacts:
-        path: .build
-        destination: /build
+  #   steps:
+  #   - checkout
+  #   - run: make promu
+  #   - run: promu crossbuild -v
+  #   - persist_to_workspace:
+  #       root: .
+  #       paths:
+  #       - .build
+  #   - store_artifacts:
+  #       path: .build
+  #       destination: /build
 
   docker_hub_master:
     executor: golang
@@ -58,14 +58,14 @@ jobs:
     - attach_workspace:
         at: .
     - run: make docker
-    - run: make docker DOCKER_REPO=quay.io/prometheus
+    # - run: make docker DOCKER_REPO=quay.io/prometheus
     - run: docker images
     - run: docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
-    - run: docker login -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
+    # - run: docker login -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
     - run: make docker-publish
-    - run: make docker-publish DOCKER_REPO=quay.io/prometheus
+    # - run: make docker-publish DOCKER_REPO=quay.io/prometheus
     - run: make docker-manifest
-    - run: make docker-manifest DOCKER_REPO=quay.io/prometheus
+    # - run: make docker-manifest DOCKER_REPO=quay.io/prometheus
 
 workflows:
   version: 2
@@ -75,14 +75,14 @@ workflows:
         filters:
           tags:
             only: /.*/
-    - build:
-        filters:
-          tags:
-            only: /.*/
+    # - build:
+    #     filters:
+    #       tags:
+    #         only: /.*/
     - docker_hub_master:
         requires:
         - test
-        - build
+        # - build
         filters:
           branches:
             only: circleci
