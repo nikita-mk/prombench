@@ -25,9 +25,13 @@ jobs:
           # likely to get OOMed and killed.
           GOOPTS: "-p 2"
     - run: git diff --exit-code
+    - persist_to_workspace:
+        paths:
+        - .build
+        root: .
     - prometheus/store_artifact:
         file: prombench
-        directory: /home/circleci/project
+        # directory: /home/circleci/project
     - prometheus/store_artifact:
         file: scaler
     - prometheus/store_artifact:
