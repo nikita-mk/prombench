@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/golang:latest   # (1)
-    working_directory: /go/src/github.com/CircleCI-Public/circleci-demo-docker
+    working_directory: /go/src/circleci-demo-docker
     steps:
       - checkout
       - setup_remote_docker:
@@ -30,6 +30,6 @@ jobs:
       # build and push Docker image
       - run: |
           TAG=0.1.$CIRCLE_BUILD_NUM
-          docker build -t   CircleCI-Public/circleci-demo-docker:$TAG ./cmd/prombench/Dockerfile     
+          docker build -t   $DOCKER_USER/circleci-demo-docker:$TAG ./cmd/prombench/Dockerfile     
           docker login -u $DOCKER_USER -p $DOCKER_PASS         # (4)
-          docker push CircleCI-Public/circleci-demo-docker:$TAG
+          docker push $DOCKER_USER/circleci-demo-docker:$TAG
