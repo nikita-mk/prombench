@@ -29,6 +29,9 @@ jobs:
         paths:
         - .build
         root: .
+    - store_artifacts:
+        path: .build
+        destination: /build
     - prometheus/store_artifact:
         file: prombench
         # directory: /home/circleci/project
