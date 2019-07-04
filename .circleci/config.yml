@@ -27,6 +27,7 @@ jobs:
     - run: git diff --exit-code
     - prometheus/store_artifact:
         file: prombench
+        directory: /home/circleci/project
     - prometheus/store_artifact:
         file: scaler
     - prometheus/store_artifact:
