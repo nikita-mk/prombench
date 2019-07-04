@@ -14,7 +14,7 @@ RUN \
         make \
 	&& rm -rf /var/lib/apt/lists/*
 
-RUN ls && pwd
+RUN ls /home
 COPY Makefile /prombench/Makefile
 COPY manifests/prombench /prombench/manifests/prombench
 RUN make build
