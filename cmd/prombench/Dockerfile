@@ -14,9 +14,10 @@ RUN \
         make \
 	&& rm -rf /var/lib/apt/lists/*
 
-RUN make build
-COPY prombench /prombench/prombench
+
 COPY Makefile /prombench/Makefile
 COPY manifests/prombench /prombench/manifests/prombench
+RUN make build
+COPY prombench /prombench/prombench
 
 WORKDIR /prombench
