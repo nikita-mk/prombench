@@ -1,102 +1,30 @@
----
 version: 2.1
-
-orbs:
-  prometheus: prometheus/prometheus@0.1.0
-
-executors:
-  # Whenever the Go version is updated here, .travis.yml and .promu.yml
-  # should also be updated.
-  golang:
-    docker:
-    - image: circleci/golang:1.12
-
 jobs:
-  test:
-    executor: golang
+  build:
+    docker:
+      - image: golang:1.6.4-jessie   # (1)
+    working_directory: /go/src/github.com/CircleCI-Public/circleci-demo-docker
     steps:
-    - prometheus/setup_environment
-    - run:
-        command: make style unused vet build 
-        environment:
-          # By default Go uses GOMAXPROCS but a Circle CI executor has many
-          # cores (> 30) while the CPU and RAM resources are throttled. If we
-          # don't limit this to the number of allocated cores, the job is
-          # likely to get OOMed and killed.
-          GOOPTS: "-p 2"
-    - run: git diff --exit-code
-    - persist_to_workspace:
-        paths:
-        - .build
-        root: .
-    - store_artifacts:
-        path: .build
-        destination: /build
-    - prometheus/store_artifact:
-        file: prombench
-        # directory: /home/circleci/project
-    - prometheus/store_artifact:
-        file: scaler
-    - prometheus/store_artifact:
-        file: fake-webserver
-    - prometheus/setup_build_environment
-    - prometheus/publish_images:
-        login_variable: DOCKER_LOGIN
-        organization: prombench
-        password_variable: DOCKER_PASSWORD
-        registry: docker.io      
-  
-  # build:
-  #   machine: true
+      - checkout
+      # ... steps for building/testing app ...
 
-  #   steps:
-  #   - checkout
-  #   - run: make promu
-  #   - run: promu crossbuild -v
-  #   - persist_to_workspace:
-  #       root: .
-  #       paths:
-  #       - .build
-  #   - store_artifacts:
-  #       path: .build
-  #       destination: /build
+      - setup_remote_docker:   # (2)
+          docker_layer_caching: true # (3)
 
-  # docker_hub_master:
-  #   executor: golang
+      # use a primary image that already has Docker (recommended)
+      # or install it during a build like we do here
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="18.06.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
 
-  #   steps:
-  #   - checkout
-  #   - setup_remote_docker:
-  #       version: 18.06.0-ce
-  #   - run: docker run --privileged linuxkit/binfmt:v0.6
-  #   - attach_workspace:
-  #       at: .
-  #   - run: make docker
-  #   # - run: make docker DOCKER_REPO=quay.io/prometheus
-  #   - run: docker images
-  #   - run: docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
-  #   # - run: docker login -u $QUAY_LOGIN -p $QUAY_PASSWORD quay.io
-  #   - run: make docker-publish
-  #   # - run: make docker-publish DOCKER_REPO=quay.io/prometheus
-  #   - run: make docker-manifest
-  #   # - run: make docker-manifest DOCKER_REPO=quay.io/prometheus
-
-workflows:
-  version: 2
-  prombench:
-    jobs:
-    - test:
-        filters:
-          tags:
-            only: /.*/
-    # - build:
-    #     filters:
-    #       tags:
-    #         only: /.*/
-    # - docker_hub_master:
-    #     requires:
-    #     - test
-    #     # - build
-    #     filters:
-    #       branches:
-    #         only: circleci
+      # build and push Docker image
+      - run: |
+          TAG=0.1.$CIRCLE_BUILD_NUM
+          docker build -t   CircleCI-Public/circleci-demo-docker:$TAG ./cmd/prombench/Dockerfile     
+          docker login -u $DOCKER_USER -p $DOCKER_PASS         # (4)
+          docker push CircleCI-Public/circleci-demo-docker:$TAG
