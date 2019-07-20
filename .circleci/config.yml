@@ -36,14 +36,14 @@ workflows:
   version: 2
   prombench:
     jobs:
-    - test:
-        filters:
-          tags:
-            only: /.*/
+    # - test:
+    #     filters:
+    #       tags:
+    #         only: /.*/
     - prometheus/publish_master:
         context: org-context
-        requires:
-        - test
+        # requires:
+        # - test
         filters:
           branches:
             only: master
