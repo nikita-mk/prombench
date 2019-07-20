@@ -44,7 +44,6 @@ workflows:
         context: org-context
         requires:
         - test
-        - build
         filters:
           branches:
             only: master
