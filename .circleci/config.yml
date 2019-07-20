@@ -31,6 +31,18 @@ jobs:
         file: scaler
     - prometheus/store_artifact:
         file: fake-webserver
+  publish_master:
+    description: |
+      Build and publish container images from the master branch.
+    docker:
+    - image: circleci/golang
+    steps:
+    - prometheus/setup_build_environment
+    - promethues/publish_images:
+        login_variable: DOCKER_LOGIN
+        organization: niki1905
+        password_variable: DOCKER_PASSWORD
+        registry: docker.io
 
 workflows:
   version: 2
@@ -40,7 +52,7 @@ workflows:
         filters:
           tags:
             only: /.*/
-    - prometheus/publish_master:
+    - publish_master:
         context: org-context
         requires:
         - test
