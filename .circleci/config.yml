@@ -40,3 +40,10 @@ workflows:
         filters:
           tags:
             only: /.*/
+    - prometheus/publish_master:
+        context: org-context
+        requires:
+        - test
+        filters:
+          branches:
+            only: master
