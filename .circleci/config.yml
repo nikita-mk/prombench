@@ -26,7 +26,7 @@ jobs:
           GOOPTS: "-p 2"
     - run: git diff --exit-code
     - persist_to_workspace:
-        root: workspace
+        root: .
         paths:
           - prombench
     - prometheus/store_artifact:
@@ -42,7 +42,7 @@ jobs:
     steps:
     - prometheus/setup_build_environment
     - attach_workspace:
-        at: /tmp/workspace
+        at: /tmp
     - prometheus/publish_images:
         login_variable: DOCKER_LOGIN
         organization: niki1905
