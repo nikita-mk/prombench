@@ -26,6 +26,7 @@ jobs:
           GOOPTS: "-p 2"
     - run: git diff --exit-code
     - prometheus/store_artifact:
+        directory: /tmp
         file: prombench
     - prometheus/store_artifact:
         file: scaler
