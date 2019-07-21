@@ -41,8 +41,6 @@ jobs:
     executor: golang
     steps:
     - prometheus/setup_build_environment
-    - attach_workspace:
-        at: /tmp
     - prometheus/publish_images:
         login_variable: DOCKER_LOGIN
         organization: niki1905
