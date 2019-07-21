@@ -29,6 +29,8 @@ jobs:
         root: .
         paths:
           - prombench
+          - fake-webserver
+          - scaler
     - prometheus/store_artifact:
         file: prombench
     - prometheus/store_artifact:
