@@ -10,7 +10,7 @@ RUN \
         ca-certificates \
         make \
 	&& rm -rf /var/lib/apt/lists/*
-ENTRYPOINT [ "realpath","." ]
+RUN realpath .
 # COPY /tmp/prombench /prombench/prombench
 # COPY Makefile /prombench/Makefile
 # COPY manifests/prombench /prombench/manifests/prombench
