@@ -30,7 +30,6 @@ jobs:
         paths:
           - prombench
     - prometheus/store_artifact:
-        directory: /tmp
         file: prombench
     - prometheus/store_artifact:
         file: scaler
