@@ -11,7 +11,7 @@ RUN \
         make \
 	&& rm -rf /var/lib/apt/lists/*
 
-COPY /build/prombench /prombench/prombench
+COPY /tmp/prombench /prombench/prombench
 COPY Makefile /prombench/Makefile
 COPY manifests/prombench /prombench/manifests/prombench
 
