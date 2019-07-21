@@ -10,10 +10,9 @@ RUN \
         ca-certificates \
         make \
 	&& rm -rf /var/lib/apt/lists/*
-RUN realpath .
-RUN ls /tmp
-# COPY /tmp/prombench /prombench/prombench
-# COPY Makefile /prombench/Makefile
-# COPY manifests/prombench /prombench/manifests/prombench
 
-# WORKDIR /prombench
+COPY prombench /prombench/prombench
+COPY Makefile /prombench/Makefile
+COPY manifests/prombench /prombench/manifests/prombench
+
+WORKDIR /prombench
