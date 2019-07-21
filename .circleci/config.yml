@@ -25,10 +25,10 @@ jobs:
           # likely to get OOMed and killed.
           GOOPTS: "-p 2"
     - run: git diff --exit-code
-    # - persist_to_workspace:
-    #     root: .
-    #     paths:
-    #       - prombench
+    - persist_to_workspace:
+        root: .
+        paths:
+          - prombench
     - prometheus/store_artifact:
         directory: /tmp
         file: prombench
