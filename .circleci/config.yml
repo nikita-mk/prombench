@@ -31,7 +31,7 @@ jobs:
     #       - prombench
     #       - fake-webserver
     #       - scaler
-    - prometheus/check_proto
+    # - prometheus/check_proto
     - prometheus/store_artifact:
         file: prombench
     - prometheus/store_artifact:
