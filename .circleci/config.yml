@@ -25,12 +25,12 @@ jobs:
           # likely to get OOMed and killed.
           GOOPTS: "-p 2"
     - run: git diff --exit-code
-    - persist_to_workspace:
-        root: .
-        paths:
-          - prombench
-          - fake-webserver
-          - scaler
+    # - persist_to_workspace:
+    #     root: .
+    #     paths:
+    #       - prombench
+    #       - fake-webserver
+    #       - scaler
     - prometheus/store_artifact:
         file: prombench
     - prometheus/store_artifact:
