@@ -2,7 +2,7 @@
 version: 2.1
 
 orbs:
-  prometheus: niki1905/prometheus@0.1.4
+  prometheus: niki1905/prometheus@0.1.5
 
 executors:
   # Whenever the Go version is updated here, .travis.yml and .promu.yml
