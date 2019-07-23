@@ -57,6 +57,11 @@ workflows:
         filters:
           tags:
             only: /.*/
+    - prometheus/build:
+        name: build
+        filters:
+          tags:
+            only: /.*/
     - publish_master:
         context: org-context
         requires:
