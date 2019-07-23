@@ -63,7 +63,15 @@ workflows:
           tags:
             only: /.*/
     - prometheus/publish_master:
-        context: org-context
+        context: prombench-context
+        requires:
+        - test
+        - build
+        filters:
+          branches:
+            only: master
+    - prometheus/publish_master:
+        context: scaler-context
         requires:
         - test
         - build
