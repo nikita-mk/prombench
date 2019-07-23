@@ -2,7 +2,7 @@
 version: 2.1
 
 orbs:
-  prometheus: prometheus/prometheus@0.1.0
+  prometheus: niki1905/prometheus@0.1.4
 
 executors:
   # Whenever the Go version is updated here, .travis.yml and .promu.yml
@@ -39,15 +39,15 @@ jobs:
     - prometheus/store_artifact:
         file: fake-webserver
   
-  publish_master:
-    executor: golang
-    steps:
-    - prometheus/setup_build_environment
-    - prometheus/publish_images:
-        login_variable: DOCKER_LOGIN
-        organization: niki1905
-        password_variable: DOCKER_PASSWORD
-        registry: docker.io
+  # publish_master:
+  #   executor: golang
+  #   steps:
+  #   - prometheus/setup_build_environment
+  #   - prometheus/publish_images:
+  #       login_variable: DOCKER_LOGIN
+  #       organization: niki1905
+  #       password_variable: DOCKER_PASSWORD
+  #       registry: docker.io
 
 workflows:
   version: 2
@@ -62,7 +62,7 @@ workflows:
         filters:
           tags:
             only: /.*/
-    - publish_master:
+    - prometheus/publish_master:
         context: org-context
         requires:
         - test
