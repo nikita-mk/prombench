@@ -25,29 +25,12 @@ jobs:
           # likely to get OOMed and killed.
           GOOPTS: "-p 2"
     - run: git diff --exit-code
-    # - persist_to_workspace:
-    #     root: .
-    #     paths:
-    #       - prombench
-    #       - fake-webserver
-    #       - scaler
-    # - prometheus/check_proto
     - prometheus/store_artifact:
         file: prombench
     - prometheus/store_artifact:
         file: scaler
     - prometheus/store_artifact:
         file: fake-webserver
-  
-  # publish_master:
-  #   executor: golang
-  #   steps:
-  #   - prometheus/setup_build_environment
-  #   - prometheus/publish_images:
-  #       login_variable: DOCKER_LOGIN
-  #       organization: niki1905
-  #       password_variable: DOCKER_PASSWORD
-  #       registry: docker.io
 
 workflows:
   version: 2
