@@ -1,5 +1,5 @@
 FROM alpine:3.8
 
-COPY scaler /scaler
+COPY .build/${OS}-${ARCH}/scaler /scaler
 
 ENTRYPOINT ["/scaler"]
