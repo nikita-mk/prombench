@@ -31,6 +31,17 @@ jobs:
         file: scaler
     - prometheus/store_artifact:
         file: fake-webserver
+    publish_prombench:
+      description: |
+        Build and publish prombench image from the master branch.
+      docker:
+      - image: circleci/golang
+      environment:
+        DOCKERFILE_PATH: "./cmd/prombench/Dockerfile"
+        DOCKER_IMAGE_NAME: "prombench"
+      steps:
+        -prometheus/publish_master
+
   # publish_prombench:
   #   description: |
   #     Build and publish prombench image from the master branch.
@@ -73,11 +84,8 @@ workflows:
         filters:
           tags:
             only: /.*/
-    - prometheus/publish_master:
+    - publish_prombench:
         context: org-context
-        environment:
-          DOCKERFILE_PATH: "./cmd/prombench/Dockerfile"
-          DOCKER_IMAGE_NAME: "prombench"
         requires:
         - test
         - build
