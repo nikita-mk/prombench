@@ -37,8 +37,8 @@ jobs:
     docker:
     - image: circleci/golang
     steps:
-    - setup_build_environment
-    - publish_images:
+    - prometheus/setup_build_environment
+    - prometheus/publish_images:
         login_variable: DOCKER_LOGIN
         organization_variable: DOCKER_REPO
         password_variable: DOCKER_PASSWORD
@@ -51,8 +51,8 @@ jobs:
     docker:
     - image: circleci/golang
     steps:
-    - setup_build_environment
-    - publish_images:
+    - prometheus/setup_build_environment
+    - prometheus/publish_images:
         login_variable: DOCKER_LOGIN
         organization_variable: DOCKER_REPO
         password_variable: DOCKER_PASSWORD
