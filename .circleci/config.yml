@@ -30,46 +30,35 @@ jobs:
     - prometheus/store_artifact:
         file: scaler
     - prometheus/store_artifact:
-        file: fake-webserver
+        file: fake-webserver   
   publish_prombench:
     description: |
       Build and publish prombench image from the master branch.
     docker:
     - image: circleci/golang
-    environment:
-      DOCKERFILE_PATH: "./cmd/prombench/Dockerfile"
-      DOCKER_IMAGE_NAME: "prombench"
     steps:
-    - prometheus/publish_master
-
-  # publish_prombench:
-  #   description: |
-  #     Build and publish prombench image from the master branch.
-  #   docker:
-  #   - image: circleci/golang
-  #   steps:
-  #   - prometheus/setup_build_environment
-  #   - prometheus/publish_images:
-  #       login_variable: DOCKER_LOGIN
-  #       organization_variable: DOCKER_REPO
-  #       password_variable: DOCKER_PASSWORD
-  #       registry: docker.io
-  #       dockerfile_variable: ./cmd/prombench/Dockerfile
-  #       image_name_variable: prombench
-  # publish_scaler:
-  #   description: |
-  #     Build and publish scaler image from the master branch.
-  #   docker:
-  #   - image: circleci/golang
-  #   steps:
-  #   - prometheus/setup_build_environment
-  #   - prometheus/publish_images:
-  #       login_variable: DOCKER_LOGIN
-  #       organization_variable: DOCKER_REPO
-  #       password_variable: DOCKER_PASSWORD
-  #       registry: docker.io
-  #       dockerfile_variable: ./cmd/scaler/Dockerfile
-  #       image_name_variable: prombench
+    - prometheus/setup_build_environment
+    - prometheus/publish_images:
+        login_variable: DOCKER_LOGIN
+        organization_variable: DOCKER_REPO
+        password_variable: DOCKER_PASSWORD
+        registry: docker.io
+        dockerfile_variable: ./cmd/prombench/Dockerfile
+        image_name_variable: prombench
+  publish_scaler:
+    description: |
+      Build and publish scaler image from the master branch.
+    docker:
+    - image: circleci/golang
+    steps:
+    - prometheus/setup_build_environment
+    - prometheus/publish_images:
+        login_variable: DOCKER_LOGIN
+        organization_variable: DOCKER_REPO
+        password_variable: DOCKER_PASSWORD
+        registry: docker.io
+        dockerfile_variable: ./cmd/scaler/Dockerfile
+        image_name_variable: scaler
 
 workflows:
   version: 2
@@ -92,11 +81,11 @@ workflows:
         filters:
           branches:
             only: master
-    # - publish_scaler:
-    #     context: org-context
-    #     requires:
-    #     - test
-    #     - build
-    #     filters:
-    #       branches:
-    #         only: master
+    - publish_scaler:
+        context: org-context
+        requires:
+        - test
+        - build
+        filters:
+          branches:
+            only: master
