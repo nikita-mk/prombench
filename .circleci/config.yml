@@ -2,7 +2,7 @@
 version: 2.1
 
 orbs:
-  prometheus: niki1905/prometheus@0.1.7
+  prometheus: niki1905/prometheus@0.1.8
 
 executors:
   # Whenever the Go version is updated here, .travis.yml and .promu.yml
@@ -31,34 +31,34 @@ jobs:
         file: scaler
     - prometheus/store_artifact:
         file: fake-webserver
-  publish_prombench:
-    description: |
-      Build and publish prombench image from the master branch.
-    docker:
-    - image: circleci/golang
-    steps:
-    - prometheus/setup_build_environment
-    - prometheus/publish_images:
-        login_variable: DOCKER_LOGIN
-        organization_variable: DOCKER_REPO
-        password_variable: DOCKER_PASSWORD
-        registry: docker.io
-        dockerfile_variable: ./cmd/prombench/Dockerfile
-        image_name_variable: prombench
-  publish_scaler:
-    description: |
-      Build and publish scaler image from the master branch.
-    docker:
-    - image: circleci/golang
-    steps:
-    - prometheus/setup_build_environment
-    - prometheus/publish_images:
-        login_variable: DOCKER_LOGIN
-        organization_variable: DOCKER_REPO
-        password_variable: DOCKER_PASSWORD
-        registry: docker.io
-        dockerfile_variable: ./cmd/scaler/Dockerfile
-        image_name_variable: prombench
+  # publish_prombench:
+  #   description: |
+  #     Build and publish prombench image from the master branch.
+  #   docker:
+  #   - image: circleci/golang
+  #   steps:
+  #   - prometheus/setup_build_environment
+  #   - prometheus/publish_images:
+  #       login_variable: DOCKER_LOGIN
+  #       organization_variable: DOCKER_REPO
+  #       password_variable: DOCKER_PASSWORD
+  #       registry: docker.io
+  #       dockerfile_variable: ./cmd/prombench/Dockerfile
+  #       image_name_variable: prombench
+  # publish_scaler:
+  #   description: |
+  #     Build and publish scaler image from the master branch.
+  #   docker:
+  #   - image: circleci/golang
+  #   steps:
+  #   - prometheus/setup_build_environment
+  #   - prometheus/publish_images:
+  #       login_variable: DOCKER_LOGIN
+  #       organization_variable: DOCKER_REPO
+  #       password_variable: DOCKER_PASSWORD
+  #       registry: docker.io
+  #       dockerfile_variable: ./cmd/scaler/Dockerfile
+  #       image_name_variable: prombench
 
 workflows:
   version: 2
@@ -73,19 +73,22 @@ workflows:
         filters:
           tags:
             only: /.*/
-    - publish_prombench:
+    - prometheus/publish_master:
         context: org-context
+        environment:
+          DOCKERFILE_PATH: "./cmd/prombench/Dockerfile"
+          DOCKER_IMAGE_NAME: "prombench"
         requires:
         - test
         - build
         filters:
           branches:
             only: master
-    - publish_scaler:
-        context: org-context
-        requires:
-        - test
-        - build
-        filters:
-          branches:
-            only: master
+    # - publish_scaler:
+    #     context: org-context
+    #     requires:
+    #     - test
+    #     - build
+    #     filters:
+    #       branches:
+    #         only: master
