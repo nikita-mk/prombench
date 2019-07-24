@@ -2,7 +2,7 @@
 version: 2.1
 
 orbs:
-  prometheus: niki1905/prometheus@0.1.8
+  prometheus: niki1905/prometheus@0.1.9
 
 executors:
   # Whenever the Go version is updated here, .travis.yml and .promu.yml
@@ -43,7 +43,7 @@ jobs:
         organization_variable: DOCKER_REPO
         password_variable: DOCKER_PASSWORD
         registry: docker.io
-        dockerfile_variable: ./cmd/prombench/Dockerfile
+        dockerfile_variable: "./cmd/prombench/Dockerfile"
         image_name_variable: prombench
   publish_scaler:
     description: |
@@ -57,7 +57,7 @@ jobs:
         organization_variable: DOCKER_REPO
         password_variable: DOCKER_PASSWORD
         registry: docker.io
-        dockerfile_variable: ./cmd/scaler/Dockerfile
+        dockerfile_variable: "./cmd/scaler/Dockerfile"
         image_name_variable: scaler
 
 workflows:
