@@ -66,37 +66,77 @@ func main() {
 			log.Printf("author is member or collaborator")
 		}
 
-		// Validate comment.
-		args, err := regexValidation(*regex, *e.GetComment().Body)
-		if err != nil {
-			log.Printf("matching command not found")
-			os.Exit(78)
-		}
+		// Expected regex.
+		benchmarkStart := "(?mi)^/benchmark\\s*(master|[0-9]+\\.[0-9]+\\.[0-9]+\\S*)?\\s*$"
+		benchmarkCancel := "(?mi)^/benchmark\\s+cancel\\s*$"
 
-		// Save args to file. Stores releaseVersion in ARG_0 and prnumber in ARG_1.
-		args = append(args, strconv.Itoa(prnumber))
-		writeArgs(args, *output)
+		// Compare regex to find whether it is of deployment or deletion.
+		if *regex == benchmarkStart {
+			// Validate comment.
+			args, err := regexValidation(*regex, *e.GetComment().Body)
+			if err != nil {
+				log.Printf("matching command not found")
+				os.Exit(78)
+			}
 
-		envVars := make(map[string]string)
-		for _, e := range os.Environ() {
-			tmp := strings.Split(e, "=")
-			envVars[tmp[0]] = tmp[1]
-		}
+			// Save args to file. Stores releaseVersion in ARG_0 and prnumber in ARG_1.
+			args = append(args, strconv.Itoa(prnumber))
+			writeArgs(args, *output)
 
-		var buf bytes.Buffer
-		commentTemplate := template.Must(template.New("Comment").Parse(os.Getenv(*templateEnvVar)))
-		if err := commentTemplate.Execute(&buf, envVars); err != nil {
-			log.Fatalln(err)
-		}
+			envVars := make(map[string]string)
+			for _, e := range os.Environ() {
+				tmp := strings.Split(e, "=")
+				envVars[tmp[0]] = tmp[1]
+			}
 
-		if err := postComment(clt, owner, repo, prnumber, buf.String()); err != nil {
-			log.Fatalln(err)
-		}
+			var buf bytes.Buffer
+			commentTemplate := template.Must(template.New("Comment").Parse(os.Getenv(*templateEnvVar)))
+			if err := commentTemplate.Execute(&buf, envVars); err != nil {
+				log.Fatalln(err)
+			}
 
-		// Setting benchmark label.
-		benchmarkLabel := []string{"benchmark"}
-		if _, _, err := clt.Issues.AddLabelsToIssue(context.Background(), owner, repo, prnumber, benchmarkLabel); err != nil {
-			log.Fatalln(err)
+			if err := postComment(clt, owner, repo, prnumber, buf.String()); err != nil {
+				log.Fatalln(err)
+			}
+
+			// Setting benchmark label.
+			benchmarkLabel := []string{"benchmark"}
+			if _, _, err := clt.Issues.AddLabelsToIssue(context.Background(), owner, repo, prnumber, benchmarkLabel); err != nil {
+				log.Fatalln(err)
+			}
+
+		} else if *regex == benchmarkCancel {
+			// Validate comment.
+			args, err := regexValidation(*regex, *e.GetComment().Body)
+			if err != nil {
+				log.Printf("matching command not found")
+				os.Exit(78)
+			}
+
+			// Save args to file. Stores prnumber in ARG_0.
+			args = append(args, strconv.Itoa(prnumber))
+			writeArgs(args, *output)
+
+			envVars := make(map[string]string)
+			for _, e := range os.Environ() {
+				tmp := strings.Split(e, "=")
+				envVars[tmp[0]] = tmp[1]
+			}
+
+			var buf bytes.Buffer
+			commentTemplate := template.Must(template.New("Comment").Parse(os.Getenv(*templateEnvVar)))
+			if err := commentTemplate.Execute(&buf, envVars); err != nil {
+				log.Fatalln(err)
+			}
+
+			if err := postComment(clt, owner, repo, prnumber, buf.String()); err != nil {
+				log.Fatalln(err)
+			}
+
+			// Deleting benchmark label.
+			if _, err := clt.Issues.DeleteLabel(context.Background(), owner, repo, "benchmark"); err != nil {
+				log.Fatalln(err)
+			}
 		}
 
 	default:
