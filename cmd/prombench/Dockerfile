@@ -6,8 +6,10 @@ RUN apk add --update make git
 
 ENV PROMBENCH_DIR /prombench
 ENV PROMBENCH_REPO https://github.com/prometheus/prombench.git
+ARG ARCH="amd64"
+ARG OS="linux"
 
-COPY prombench /usr/bin/prombench
+COPY .build/${OS}-${ARCH}/prombench /usr/bin/prombench
 COPY cmd/prombench/clone.sh /usr/bin/clone.sh
 
 ENTRYPOINT ["/usr/bin/clone.sh"]
