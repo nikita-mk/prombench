@@ -43,6 +43,9 @@ jobs:
         organization: niki1905
         password_variable: DOCKER_PASSWORD
         registry: docker.io
+        after-deps:
+          - run: echo "export DOCKERFILE_PATH=./cmd/prombench/Dockerfile" >> $BASH_ENV
+          - run: echo "export DOCKER_IMAGE_NAME=nikiprom" >> $BASH_ENV
     # - prometheus/publish_images:
     #     dockerfile_variable: "./cmd/prombench/Dockerfile"
     #     image_name_variable: prombench
