@@ -40,7 +40,7 @@ jobs:
     - prometheus/setup_build_environment
     - prometheus/publish_images:
         login_variable: DOCKER_LOGIN
-        organization: niki1905
+        organization: DOCKER_REPO
         password_variable: DOCKER_PASSWORD
         registry: docker.io
         after-deps:
@@ -48,7 +48,7 @@ jobs:
           - run: echo "export DOCKER_IMAGE_NAME=testingprom" >> $BASH_ENV
     - prometheus/publish_images:
         login_variable: DOCKER_LOGIN
-        organization: niki1905
+        organization: DOCKER_REPO
         password_variable: DOCKER_PASSWORD
         registry: docker.io
         after-deps:
