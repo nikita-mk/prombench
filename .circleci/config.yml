@@ -53,7 +53,7 @@ jobs:
         organization: niki1905
         password_variable: DOCKER_PASSWORD
         registry: docker.io
-        dockerfile_path: ./cmd/scaler/Dockerfile
+        dockerfile_path: ./tools/scaler/Dockerfile
         container_image_name: scalertest
     #     after-deps:
           # - run: echo "export DOCKERFILE_PATH=./cmd/scaler/Dockerfile" >> $BASH_ENV
