@@ -43,14 +43,18 @@ jobs:
         organization: niki1905
         password_variable: DOCKER_PASSWORD
         registry: docker.io
+        dockerfile_path: ./cmd/prombench/Dockerfile
+        container_image_name: prombenchtest
         # after-deps:
         #   - run: echo "export DOCKERFILE_PATH=./cmd/prombench/Dockerfile" >> $BASH_ENV
         #   - run: echo "export DOCKER_IMAGE_NAME=testingprom" >> $BASH_ENV
-    # - prometheus/publish_images:
-    #     login_variable: DOCKER_LOGIN
-    #     organization: niki1905
-    #     password_variable: DOCKER_PASSWORD
-    #     registry: docker.io
+    - prometheus/publish_images:
+        login_variable: DOCKER_LOGIN
+        organization: niki1905
+        password_variable: DOCKER_PASSWORD
+        registry: docker.io
+        dockerfile_path: ./cmd/scaler/Dockerfile
+        container_image_name: scalertest
     #     after-deps:
           # - run: echo "export DOCKERFILE_PATH=./cmd/scaler/Dockerfile" >> $BASH_ENV
           # - run: echo "export DOCKER_IMAGE_NAME=testingscaler" >> $BASH_ENV
