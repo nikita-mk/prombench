@@ -2,7 +2,7 @@
 version: 2.1
 
 orbs:
-  prometheus: niki1905/prometheus@0.1.13
+  prometheus: niki1905/prometheus@0.1.14
 
 executors:
   # Whenever the Go version is updated here, .travis.yml and .promu.yml
@@ -40,20 +40,20 @@ jobs:
     - prometheus/setup_build_environment
     - prometheus/publish_images:
         login_variable: DOCKER_LOGIN
-        organization: DOCKER_REPO
+        organization: niki1905
         password_variable: DOCKER_PASSWORD
         registry: docker.io
-        after-deps:
-          - run: echo "export DOCKERFILE_PATH=./cmd/prombench/Dockerfile" >> $BASH_ENV
-          - run: echo "export DOCKER_IMAGE_NAME=testingprom" >> $BASH_ENV
-    - prometheus/publish_images:
-        login_variable: DOCKER_LOGIN
-        organization: DOCKER_REPO
-        password_variable: DOCKER_PASSWORD
-        registry: docker.io
-        after-deps:
-          - run: echo "export DOCKERFILE_PATH=./cmd/scaler/Dockerfile" >> $BASH_ENV
-          - run: echo "export DOCKER_IMAGE_NAME=testingscaler" >> $BASH_ENV
+        # after-deps:
+        #   - run: echo "export DOCKERFILE_PATH=./cmd/prombench/Dockerfile" >> $BASH_ENV
+        #   - run: echo "export DOCKER_IMAGE_NAME=testingprom" >> $BASH_ENV
+    # - prometheus/publish_images:
+    #     login_variable: DOCKER_LOGIN
+    #     organization: niki1905
+    #     password_variable: DOCKER_PASSWORD
+    #     registry: docker.io
+    #     after-deps:
+          # - run: echo "export DOCKERFILE_PATH=./cmd/scaler/Dockerfile" >> $BASH_ENV
+          # - run: echo "export DOCKER_IMAGE_NAME=testingscaler" >> $BASH_ENV
 
 workflows:
   version: 2
