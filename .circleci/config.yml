@@ -38,7 +38,7 @@ jobs:
     - image: circleci/golang
     steps:
     - prometheus/setup_build_environment
-    - prometheus/publish_images:
+    - prometheus/publish_master:
         organization: niki1905
         dockerfile_path: ./cmd/prombench/Dockerfile
         container_image_name: prombenchtest
