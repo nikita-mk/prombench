@@ -11,6 +11,22 @@ executors:
     docker:
     - image: circleci/golang:1.12
 
+commands:
+  publish_images:
+    parameters:
+      dockerfile_path:
+        type: string
+      container_image_name:
+        type: string
+    steps:
+    - prometheus/publish_images:
+        login_variable: DOCKER_LOGIN
+        organization: niki1905
+        password_variable: DOCKER_PASSWORD
+        registry: docker.io
+        dockerfile_path: << parameters.dockerfile_path >>
+        container_image_name: << parameters.container_image_name >>
+
 jobs:
   test:
     executor: golang
@@ -38,18 +54,10 @@ jobs:
     - image: circleci/golang
     steps:
     - prometheus/setup_build_environment
-    - prometheus/publish_images:
-        login_variable: DOCKER_LOGIN
-        organization: niki1905
-        password_variable: DOCKER_PASSWORD
-        registry: docker.io
+    - publish_images:
         dockerfile_path: ./cmd/prombench/Dockerfile
         container_image_name: prombenchtest
-    - prometheus/publish_images:
-        login_variable: DOCKER_LOGIN
-        organization: niki1905
-        password_variable: DOCKER_PASSWORD
-        registry: docker.io
+    - publish_images:
         dockerfile_path: ./tools/scaler/Dockerfile
         container_image_name: scalertest
 
