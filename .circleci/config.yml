@@ -2,7 +2,7 @@
 version: 2.1
 
 orbs:
-  prometheus: prometheus/prometheus@dev:be2c698
+  prometheus: prometheus/prometheus@0.2.0
 
 executors:
   # Whenever the Go version is updated here, .travis.yml and .promu.yml
@@ -21,7 +21,7 @@ commands:
     steps:
     - prometheus/publish_images:
         login_variable: DOCKER_LOGIN
-        organization: niki1905
+        organization: prombench
         password_variable: DOCKER_PASSWORD
         registry: docker.io
         dockerfile_path: << parameters.dockerfile_path >>
@@ -42,11 +42,12 @@ jobs:
           GOOPTS: "-p 2"
     - run: git diff --exit-code
     - prometheus/store_artifact:
-        file: prombench
+        file: prombench/prombench
     - prometheus/store_artifact:
         file: scaler
     - prometheus/store_artifact:
-        file: fake-webserver   
+        file: fake-webserver
+   
   publish_images:
     description: |
       Build and publish prombench image from the master branch.
@@ -55,12 +56,23 @@ jobs:
     steps:
     - prometheus/setup_build_environment
     - publish_images:
-        dockerfile_path: ./cmd/prombench/Dockerfile
-        container_image_name: prombenchtest
+        dockerfile_path: ./prombench/cmd/prombench/Dockerfile
+        container_image_name: prombench
+    - publish_images:
+        dockerfile_path: ./tools/amGithubNotifier/Dockerfile
+        container_image_name: amgithubnotifier
+    - publish_images:
+        dockerfile_path: ./tools/commentMonitor/Dockerfile
+        container_image_name: comment-monitor
+    - publish_images:
+        dockerfile_path: ./tools/fake-webserver/Dockerfile
+        container_image_name: fake-webserver
+    - publish_images:
+        dockerfile_path: ./tools/load-generator/Dockerfile
+        container_image_name: load-generator
     - publish_images:
         dockerfile_path: ./tools/scaler/Dockerfile
-        container_image_name: scalertest
-
+        container_image_name: scaler
 workflows:
   version: 2
   prombench:
